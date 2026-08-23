@@ -1,0 +1,137 @@
+@import "tailwindcss";
+
+/* ------------------------------------------------------------------ theme
+   Dark canvas, electric lime money. Same bones as the reference board,
+   deliberately not another cream-and-orange clone.                        */
+
+:root {
+  --bg: #0a0a0c;
+  --surface: #121217;
+  --surface-2: #17171e;
+  --surface-3: #1d1d26;
+  --border: #24242f;
+  --border-soft: #1b1b23;
+  --text: #f4f4f7;
+  --muted: #8b8b9c;
+  --muted-dim: #5c5c6b;
+  --accent: #c6f24e;
+  --accent-hot: #d4ff5c;
+  --accent-ink: #0a0a0c;
+  --accent-soft: rgba(198, 242, 78, 0.1);
+  --accent-line: rgba(198, 242, 78, 0.32);
+  --live: #4ade80;
+}
+
+@theme inline {
+  --color-bg: var(--bg);
+  --color-surface: var(--surface);
+  --color-surface-2: var(--surface-2);
+  --color-surface-3: var(--surface-3);
+  --color-line: var(--border);
+  --color-line-soft: var(--border-soft);
+  --color-ink: var(--text);
+  --color-muted: var(--muted);
+  --color-muted-dim: var(--muted-dim);
+  --color-accent: var(--accent);
+  --color-accent-hot: var(--accent-hot);
+  --color-accent-ink: var(--accent-ink);
+  --color-accent-soft: var(--accent-soft);
+  --color-live: var(--live);
+
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --font-display: var(--font-display);
+}
+
+html {
+  background: var(--bg);
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-geist-sans), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+}
+
+/* ------------------------------------------------------------------ bits */
+
+/* label notched into the top border of a framed rail */
+.rail {
+  position: relative;
+  border: 1px solid var(--accent-line);
+  border-radius: 14px;
+  padding: 0.25rem 0;
+}
+
+.rail-label {
+  position: absolute;
+  top: 0;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  background: var(--bg);
+  padding: 0 0.6rem;
+  font-size: 0.6875rem;
+  font-weight: 700;
+  letter-spacing: 0.12em;
+  color: var(--accent);
+  white-space: nowrap;
+}
+
+/* the top-3 glow on the leaderboard */
+.rank-1 {
+  background: linear-gradient(
+    180deg,
+    rgba(198, 242, 78, 0.13) 0%,
+    rgba(198, 242, 78, 0.07) 100%
+  );
+}
+.rank-2 {
+  background: rgba(198, 242, 78, 0.055);
+}
+.rank-3 {
+  background: rgba(198, 242, 78, 0.025);
+}
+
+.cta-glow {
+  box-shadow:
+    0 0 0 1px rgba(198, 242, 78, 0.5),
+    0 8px 28px -6px rgba(198, 242, 78, 0.45);
+}
+
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.35;
+  }
+}
+.pulse-dot {
+  animation: pulse-dot 2s ease-in-out infinite;
+}
+
+@keyframes slide-in {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+.slide-in {
+  animation: slide-in 0.35s ease-out;
+}
+
+::selection {
+  background: var(--accent);
+  color: var(--accent-ink);
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: var(--border) transparent;
+}
