@@ -51,6 +51,43 @@ export const removeListing = mutation({
   },
 });
 
+/**
+ * Correct a listing's bid outright. `applyBid` only ever adds, which is right for
+ * payments but useless for fixing a seed or handling a refund. Keeps the slug and
+ * click history intact.
+ */
+export const setBid = mutation({
+  args: {
+    secret: v.string(),
+    slug: v.string(),
+    bidValue: v.number(),
+    totalPaid: v.optional(v.number()),
+  },
+  handler: async (ctx, { secret, slug, bidValue, totalPaid }) => {
+    assertTrusted(secret);
+    if (bidValue < 0) throw new Error("bidValue cannot be negative.");
+
+    const listing = await ctx.db
+      .query("listings")
+      .withIndex("by_slug", (q) => q.eq("slug", slug))
+      .unique();
+
+    if (!listing) return { updated: false as const };
+
+    await ctx.db.patch(listing._id, {
+      bidValue,
+      totalPaid: totalPaid ?? bidValue,
+    });
+
+    return {
+      updated: true as const,
+      domain: listing.domain,
+      from: listing.bidValue,
+      to: bidValue,
+    };
+  },
+});
+
 /** Pull a listing off the board without deleting its history. */
 export const hideListing = mutation({
   args: { secret: v.string(), slug: v.string(), hidden: v.boolean() },
