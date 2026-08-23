@@ -68,6 +68,22 @@ export const bySlug = query({
   },
 });
 
+/**
+ * Where a /go/<slug> link points. Deliberately a query with no secret: resolving
+ * the destination must not depend on write credentials, so an outbound link keeps
+ * working even when click counting is broken or unconfigured.
+ */
+export const resolveSlug = query({
+  args: { slug: v.string() },
+  handler: async (ctx, { slug }) => {
+    const doc = await ctx.db
+      .query("listings")
+      .withIndex("by_slug", (q) => q.eq("slug", slug))
+      .unique();
+    return doc && doc.status === "live" ? doc.url : null;
+  },
+});
+
 export const recentBids = query({
   args: { limit: v.optional(v.number()) },
   handler: async (ctx, { limit = 12 }) => {
