@@ -25,3 +25,14 @@ export function internalSecret(): string {
 }
 
 export const isWriteConfigured = Boolean(deploymentUrl && process.env.INTERNAL_API_SECRET);
+
+/**
+ * Which env var is missing, for logging. Deployments fail this way far more often
+ * than local setups do, so the message must name the variable rather than assume
+ * someone is looking at a .env.local file.
+ */
+export function missingWriteEnv(): string | null {
+  if (!deploymentUrl) return "NEXT_PUBLIC_CONVEX_URL";
+  if (!process.env.INTERNAL_API_SECRET) return "INTERNAL_API_SECRET";
+  return null;
+}

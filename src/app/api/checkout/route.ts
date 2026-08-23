@@ -9,7 +9,7 @@ import {
   MAX_BID,
   MIN_BID,
 } from "@/lib/polar";
-import { convexClient, internalSecret, isWriteConfigured } from "@/lib/convex";
+import { convexClient, internalSecret, isWriteConfigured, missingWriteEnv } from "@/lib/convex";
 import { normalizeUrl } from "@/lib/url";
 
 export const runtime = "nodejs";
@@ -44,8 +44,9 @@ export async function POST(req: Request) {
   }
 
   if (!isWriteConfigured) {
+    console.error(`[checkout] ${missingWriteEnv()} is not set on this deployment`);
     return NextResponse.json(
-      { error: "Database isn't configured yet. Add your Convex keys to .env.local." },
+      { error: "Payments aren't configured on this deployment yet." },
       { status: 503 },
     );
   }
