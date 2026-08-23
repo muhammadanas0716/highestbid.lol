@@ -41,7 +41,7 @@ function Row({ row }: { row: BoardRow }) {
         #{row.rank}
       </span>
 
-      <Favicon src={row.favicon_url} domain={row.domain} size="md" />
+      <Favicon src={row.faviconUrl} domain={row.domain} size="md" />
 
       <div className="min-w-0 flex-1">
         <h3 className="truncate text-[1.05rem] font-bold group-hover:text-accent">
@@ -58,7 +58,7 @@ function Row({ row }: { row: BoardRow }) {
       </div>
 
       <span className="shrink-0 text-lg font-bold tabular-nums sm:text-xl">
-        {money(row.bid_value)}
+        {money(row.bidValue)}
       </span>
     </a>
   );

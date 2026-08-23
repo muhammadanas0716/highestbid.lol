@@ -5,42 +5,44 @@ export type BoardRow = {
   domain: string;
   title: string;
   description: string | null;
-  favicon_url: string | null;
-  bid_value: number;
+  faviconUrl: string | null;
+  bidValue: number;
   clicks: number;
-  created_at: string;
+  createdAt: number;
   rank: number;
 };
 
-export type Listing = BoardRow & {
-  url_key: string;
-  total_paid: number;
-  status: "pending" | "live" | "hidden";
+export type ListingStub = {
+  slug: string;
+  domain: string;
+  faviconUrl: string | null;
 };
 
 export type RecentBid = {
   id: string;
   amount: number;
-  created_at: string;
-  listing: Pick<BoardRow, "slug" | "domain" | "favicon_url"> | null;
+  createdAt: number;
+  listing: ListingStub | null;
 };
 
 export type ClickEvent = {
-  id: number;
-  created_at: string;
-  listing: Pick<BoardRow, "slug" | "domain" | "favicon_url"> | null;
+  id: string;
+  createdAt: number;
+  listing: ListingStub | null;
 };
 
 export type SiteStats = {
   revenue: number;
-  live_listings: number;
-  total_listings: number;
-  total_clicks: number;
+  liveListings: number;
+  totalListings: number;
+  totalClicks: number;
 };
 
 export type Sponsor = {
   position: "left" | "right";
-  listing: Pick<BoardRow, "slug" | "domain" | "title" | "description" | "favicon_url"> | null;
+  listing:
+    | (ListingStub & { title: string; description: string | null })
+    | null;
 };
 
 export type ScrapedMeta = {

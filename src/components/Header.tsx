@@ -32,12 +32,12 @@ export default function Header({ stats }: { stats: SiteStats }) {
           <div className="flex items-center gap-3 rounded-full border border-line bg-surface px-4 py-2 text-sm">
             <span className="flex items-center gap-1.5">
               <span className="pulse-dot h-2 w-2 rounded-full bg-live" />
-              <strong className="font-bold">{compact(stats.live_listings)}</strong>
+              <strong className="font-bold">{compact(stats.liveListings)}</strong>
               <span className="text-muted">Live</span>
             </span>
             <span className="h-4 w-px bg-line" />
             <span className="flex items-center gap-1.5">
-              <strong className="font-bold">{compact(stats.total_clicks)}</strong>
+              <strong className="font-bold">{compact(stats.totalClicks)}</strong>
               <span className="text-muted">Clicks</span>
             </span>
           </div>

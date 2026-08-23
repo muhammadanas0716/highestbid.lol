@@ -15,10 +15,10 @@ export default function RecentBids({ items }: { items: RecentBid[] }) {
               key={bid.id}
               className="flex items-center gap-3 border-b border-line-soft px-2 py-3 last:border-b-0"
             >
-              <Favicon src={bid.listing?.favicon_url ?? null} domain={bid.listing?.domain ?? "?"} size="sm" />
+              <Favicon src={bid.listing?.faviconUrl ?? null} domain={bid.listing?.domain ?? "?"} size="sm" />
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-bold">{bid.listing?.domain ?? "unknown"}</p>
-                <p className="text-xs text-muted">{relativeTime(bid.created_at)}</p>
+                <p className="text-xs text-muted">{relativeTime(bid.createdAt)}</p>
               </div>
               <span className="shrink-0 text-base font-bold text-accent tabular-nums">
                 {money(bid.amount)}

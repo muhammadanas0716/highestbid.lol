@@ -42,7 +42,7 @@ export default function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
         SPONSORED
       </span>
       <span className="mx-auto block w-fit">
-        <Favicon src={listing.favicon_url} domain={listing.domain} size="md" />
+        <Favicon src={listing.faviconUrl} domain={listing.domain} size="md" />
       </span>
       <p className="mt-3 text-sm font-bold group-hover:text-accent">{listing.domain}</p>
       {listing.description && (

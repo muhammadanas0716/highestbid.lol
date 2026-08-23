@@ -1,10 +1,17 @@
 import { NextResponse } from "next/server";
 import { validateEvent, WebhookVerificationError } from "@polar-sh/sdk/webhooks";
-import { supabaseAdmin } from "@/lib/supabase";
+import { api } from "@convex/_generated/api";
+import type { Id } from "@convex/_generated/dataModel";
+import { convexClient, internalSecret, isWriteConfigured } from "@/lib/convex";
 import { centsToDollars, clampBid } from "@/lib/polar";
 
 export const runtime = "nodejs";
 
+/**
+ * Signature verification needs Node crypto and the raw body, which is why this
+ * lives here rather than in a Convex httpAction — Convex's default runtime is a
+ * V8 isolate. Verified events are handed straight to a Convex mutation.
+ */
 export async function POST(req: Request) {
   const secret = process.env.POLAR_WEBHOOK_SECRET;
   if (!secret) {
@@ -49,20 +56,24 @@ export async function POST(req: Request) {
     return NextResponse.json({ ok: true, skipped: "bad amount" });
   }
 
-  // checkoutId keys idempotency — Polar retries, and a retry must not bid twice.
-  const idempotencyKey = order.checkoutId ?? `order_${order.id}`;
-
-  const { error } = await supabaseAdmin().rpc("apply_bid", {
-    p_listing_id: listingId,
-    p_amount: amount,
-    p_checkout_id: idempotencyKey,
-  });
-
-  if (error) {
-    // Non-2xx makes Polar retry, which is what we want on a transient DB failure.
-    console.error("[webhook] apply_bid failed", error.message);
-    return NextResponse.json({ error: "Could not apply bid." }, { status: 500 });
+  if (!isWriteConfigured) {
+    console.error("[webhook] convex is not configured");
+    return NextResponse.json({ error: "Not configured." }, { status: 503 });
   }
 
-  return NextResponse.json({ ok: true });
+  // checkoutId keys idempotency — Polar retries, and a retry must not bid twice.
+  try {
+    const result = await convexClient().mutation(api.listings.applyBid, {
+      secret: internalSecret(),
+      // Polar metadata is untyped strings; applyBid re-checks the row exists.
+      listingId: listingId as Id<"listings">,
+      amount,
+      checkoutId: order.checkoutId ?? `order_${order.id}`,
+    });
+    return NextResponse.json({ ok: true, ...result });
+  } catch (err) {
+    // Non-2xx makes Polar retry, which is what we want on a transient failure.
+    console.error("[webhook] applyBid failed", err);
+    return NextResponse.json({ error: "Could not apply bid." }, { status: 500 });
+  }
 }

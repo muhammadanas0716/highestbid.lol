@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { normalizeUrl } from "@/lib/url";
 import { resolvesPublicly, scrapeUrl } from "@/lib/scrape";
-import { isSupabaseConfigured, supabaseAdmin } from "@/lib/supabase";
+import { getRivalBids } from "@/lib/queries";
 
 export const runtime = "nodejs";
 
@@ -22,20 +22,10 @@ export async function POST(req: Request) {
     return NextResponse.json({ error: "Couldn't reach that domain." }, { status: 400 });
   }
 
-  const meta = await scrapeUrl(normalized);
-  const existing = await findExisting(normalized.urlKey);
+  const [meta, { existingBid }] = await Promise.all([
+    scrapeUrl(normalized),
+    getRivalBids(normalized.urlKey),
+  ]);
 
-  return NextResponse.json({ meta, existing });
-}
-
-async function findExisting(urlKey: string) {
-  if (!isSupabaseConfigured) return null;
-
-  const { data } = await supabaseAdmin()
-    .from("listings")
-    .select("slug, bid_value, status")
-    .eq("url_key", urlKey)
-    .maybeSingle();
-
-  return data ?? null;
+  return NextResponse.json({ meta, existingBid });
 }

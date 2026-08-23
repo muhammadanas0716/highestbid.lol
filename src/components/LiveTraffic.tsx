@@ -15,10 +15,10 @@ export default function LiveTraffic({ items }: { items: ClickEvent[] }) {
               key={item.id}
               className="flex items-center gap-3 border-b border-line-soft px-2 py-3 last:border-b-0"
             >
-              <Favicon src={item.listing?.favicon_url ?? null} domain={item.listing?.domain ?? "?"} size="sm" />
+              <Favicon src={item.listing?.faviconUrl ?? null} domain={item.listing?.domain ?? "?"} size="sm" />
               <div className="min-w-0">
                 <p className="truncate text-sm font-bold">{item.listing?.domain ?? "unknown"}</p>
-                <p className="text-xs text-muted">got a click {relativeTime(item.created_at)}</p>
+                <p className="text-xs text-muted">got a click {relativeTime(item.createdAt)}</p>
               </div>
             </li>
           ))}

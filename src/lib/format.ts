@@ -11,8 +11,8 @@ export function compact(value: number): string {
 }
 
 /** "just now" / "3 mins ago" / "2 hours ago" / "4 days ago" */
-export function relativeTime(iso: string, now: number = Date.now()): string {
-  const then = new Date(iso).getTime();
+export function relativeTime(at: string | number, now: number = Date.now()): string {
+  const then = typeof at === "number" ? at : new Date(at).getTime();
   if (Number.isNaN(then)) return "";
 
   const seconds = Math.max(0, Math.floor((now - then) / 1000));
