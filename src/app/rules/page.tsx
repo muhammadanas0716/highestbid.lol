@@ -4,6 +4,7 @@ import Header from "@/components/Header";
 import { getStats } from "@/lib/queries";
 import { MAX_BID, MIN_BID } from "@/lib/polar";
 import { money } from "@/lib/format";
+import { SUPPORT_EMAIL } from "@/lib/site";
 
 export const metadata = { title: "Rules — highestbid.lol" };
 export const dynamic = "force-dynamic";
@@ -74,7 +75,21 @@ export default async function RulesPage() {
           The two cards flanking the board sit above the ranking entirely. They&rsquo;re
           rented by the day at <strong className="text-accent">$10 / day</strong> rather
           than bid on, so they don&rsquo;t move when the board does. Mail{" "}
-          <span className="text-ink">hello@highestbid.lol</span> to take one.
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-accent hover:underline">
+            {SUPPORT_EMAIL}
+          </a>{" "}
+          to take one.
+        </p>
+
+        <h2 id="support" className="mt-14 scroll-mt-24 font-display text-3xl">
+          Support
+        </h2>
+        <p className="mt-4 leading-relaxed text-muted">
+          Something broken, a listing to report, or a takedown request? Mail{" "}
+          <a href={`mailto:${SUPPORT_EMAIL}`} className="text-accent hover:underline">
+            {SUPPORT_EMAIL}
+          </a>
+          . Include the listing URL and we&rsquo;ll get back to you.
         </p>
 
         <Link

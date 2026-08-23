@@ -1,9 +1,8 @@
 import Link from "next/link";
 import { truncate } from "@/lib/format";
+import { SPONSOR_DAILY_RATE as DAILY_RATE } from "@/lib/site";
 import type { Sponsor } from "@/lib/types";
 import Favicon from "./Favicon";
-
-const DAILY_RATE = 10;
 
 export default function SponsorCard({ sponsor }: { sponsor: Sponsor }) {
   if (!sponsor.listing) {
